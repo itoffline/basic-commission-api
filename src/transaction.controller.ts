@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import CreateTransactionDto from './dto/createTransaction.dto';
 import { TransactionService } from './transaction.service';
+import { Commission } from './types/commission';
 
 @Controller('Transactions')
 export class TransactionController {
@@ -10,6 +11,52 @@ export class TransactionController {
   @Get()
   getTransactions() {
     return this.TransactionsService.getAllTransactions();
+  }
+
+  @Get(':amount/:currency')
+  commission(@Param() params): Commission {
+    const { amount, currency } = params;
+    if (!amount || !currency) {
+      throw new Error('Must include amount and currency in request params!');
+    }
+    const { currency: resCurrency, amount: resAmount } =
+      this.TransactionsService.commission(amount, currency);
+
+    // if the commission is 0.05 cents or above, return the calculated commission
+    // if it is below 0.05 cents, return the minimum commission of 0.05 cents
+    if (resAmount > 0.05) {
+      return {
+        currency: resCurrency,
+        amount: resAmount,
+      };
+    }
+    return {
+      currency: resCurrency,
+      amount: 0.05,
+    };
+  }
+
+  @Get('transactionCommission/:id')
+  async commissionByTransactionId(id: number) {
+    try {
+      const { amount: resAmount, currency: resCurrency } =
+        await this.TransactionsService.commissionByTransactionId(id);
+      if (!resAmount || !resCurrency) {
+        throw new Error('Transaction not found');
+      }
+      if (resAmount > 0.05) {
+        return {
+          currency: resCurrency,
+          amount: resAmount,
+        };
+      }
+      return {
+        currency: resCurrency,
+        amount: 0.05,
+      };
+    } catch (err) {
+      throw new Error('Failed to get transaction commission');
+    }
   }
 
   // get Transaction by id
