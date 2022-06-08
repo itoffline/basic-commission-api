@@ -2,10 +2,15 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthService } from './auth/auth.service';
 import * as Joi from 'joi';
 
 import { StoreModule } from './store/store.module';
 import { TransactionModule } from './transaction.module';
+import { UsersModule } from './users/users.module';
+import { PassportModule } from '@nestjs/passport';
+
+import { LocalStrategy } from './auth/local.strategy';
 
 @Module({
   imports: [
@@ -22,8 +27,11 @@ import { TransactionModule } from './transaction.module';
     }),
     StoreModule,
     TransactionModule,
+    UsersModule,
+    PassportModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthService, LocalStrategy],
+  exports: [AuthService],
 })
 export class AppModule {}

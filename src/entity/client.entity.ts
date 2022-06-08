@@ -9,7 +9,7 @@ export class Client {
   name: string;
 
   @Column()
-  email: string;
+  password: string;
 
   @Column({ default: false })
   privilegedCommission: boolean;
