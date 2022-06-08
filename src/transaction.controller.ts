@@ -13,7 +13,7 @@ export class TransactionController {
     return this.TransactionsService.getAllTransactions();
   }
 
-  @Get(':amount/:currency')
+  @Get('commission/:currency/:amount')
   commission(@Param() params): Commission {
     const { amount, currency } = params;
     if (!amount || !currency) {
@@ -36,8 +36,10 @@ export class TransactionController {
     };
   }
 
-  @Get('transactionCommission/:id')
-  async commissionByTransactionId(id: number) {
+  @Get('commission/:id')
+  async commissionByTransactionId(
+    @Param('id') id: number,
+  ): Promise<Commission> {
     try {
       const { amount: resAmount, currency: resCurrency } =
         await this.TransactionsService.commissionByTransactionId(id);

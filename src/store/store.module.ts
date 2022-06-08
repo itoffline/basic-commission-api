@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Transaction } from '../entity/transaction.entity';
+import { User } from '../entity/user.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Transaction } from '../entity/transaction.entity';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [Transaction],
+        entities: [Transaction, User],
         ssl: {
           rejectUnauthorized: false,
         },
