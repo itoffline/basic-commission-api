@@ -1,7 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import CreateTransactionDto from './dto/createTransaction.dto';
 import { TransactionService } from './transaction.service';
 import { Commission } from './types/commission';
+import { JwtAuthGuard } from './auth/jwt.auth.guard';
 
 @Controller('Transactions')
 export class TransactionController {
@@ -36,9 +45,10 @@ export class TransactionController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('commission/:id')
   async commissionByTransactionId(
-    @Param('id') id: number,
+    @Param('id') id: string,
   ): Promise<Commission> {
     try {
       const { amount: resAmount, currency: resCurrency } =
@@ -64,10 +74,11 @@ export class TransactionController {
   // get Transaction by id
   @Get(':id')
   getTransactionById(@Param('id') id: string) {
-    return this.TransactionsService.getTransactionById(Number(id));
+    return this.TransactionsService.getTransactionById(id);
   }
 
   // create Transaction
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createTransaction(@Body() Transaction: CreateTransactionDto) {
     return this.TransactionsService.createTransaction(Transaction);
@@ -76,6 +87,6 @@ export class TransactionController {
   //delete Transaction
   @Delete(':id')
   async deleteTransaction(@Param('id') id: string) {
-    this.TransactionsService.deleteTransaction(Number(id));
+    this.TransactionsService.deleteTransaction(id);
   }
 }

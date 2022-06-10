@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import CreateUserDto from '../dto/createUser.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,23 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload, {
+        secret: this.configService.get('SECRET_JWT_KEY'),
+        expiresIn: '1h',
+      }),
+    };
+  }
+
+  async signUp(user: CreateUserDto) {
+    // check user doesn't already exist
+    const existingUser = await this.usersService.findOne(user.username);
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+
+    const createdUser = await this.usersService.create(user);
+    const payload = { username: createdUser.username, sub: createdUser.id };
     return {
       access_token: this.jwtService.sign(payload, {
         secret: this.configService.get('SECRET_JWT_KEY'),

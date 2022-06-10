@@ -102,12 +102,16 @@ describe('TransactionController', () => {
     });
     it('should fail when the commissionByTransactionId returns currency or amount empty value and pass', async () => {
       try {
-        await transactionController.commissionByTransactionId(0);
+        await transactionController.commissionByTransactionId(
+          '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+        );
       } catch (err) {
         expect(err.message).toBe('Failed to get transaction commission');
       }
       try {
-        await transactionController.commissionByTransactionId(0);
+        await transactionController.commissionByTransactionId(
+          '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+        );
       } catch (err) {
         expect(err.message).toBe('Failed to get transaction commission');
       }
@@ -141,8 +145,12 @@ describe('TransactionController', () => {
       );
     });
     it('should return above 0.05 cents commission result and above', async () => {
-      const res1 = await transactionController.commissionByTransactionId(0);
-      const res2 = await transactionController.commissionByTransactionId(0);
+      const res1 = await transactionController.commissionByTransactionId(
+        '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+      );
+      const res2 = await transactionController.commissionByTransactionId(
+        '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+      );
       expect(res1).toEqual({
         currency: 'EUR',
         amount: 10,

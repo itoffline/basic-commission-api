@@ -7,6 +7,9 @@ import { AuthService } from './auth/auth.service';
 import { LocalStrategy } from './auth/local.strategy';
 import { UsersService } from './users/users.service';
 
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from './entity/user.entity';
+
 describe('AppController', () => {
   let appController: AppController;
 
@@ -23,6 +26,7 @@ describe('AppController', () => {
             }),
           },
         },
+        { provide: getRepositoryToken(User), useValue: {} },
         LocalStrategy,
         JwtService,
         UsersService,

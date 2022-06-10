@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from '../entity/user.entity';
 
 @Entity()
 export class Transaction {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   amount: number;
@@ -11,8 +12,8 @@ export class Transaction {
   @Column()
   currency: string;
 
-  @Column()
-  client_id: string;
+  @ManyToOne(() => User, (user) => user.id)
+  user: string;
 
   @Column()
   date: string;

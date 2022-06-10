@@ -35,10 +35,10 @@ export class TransactionService {
     };
   }
 
-  async commissionByTransactionId(id: number): Promise<Commission> {
+  async commissionByTransactionId(id: string): Promise<Commission> {
     try {
-      const transaction = await this.transactionRepository.findOne({
-        where: { id },
+      const transaction = await this.transactionRepository.findOneBy({
+        id,
       });
       if (!transaction) {
         throw new HttpException('Transaction not found', HttpStatus.NOT_FOUND);
@@ -61,7 +61,7 @@ export class TransactionService {
   }
 
   // find by id
-  async getTransactionById(id: number) {
+  async getTransactionById(id: string) {
     const Transaction = await this.transactionRepository.findOne({
       where: { id },
     });
@@ -81,7 +81,7 @@ export class TransactionService {
   }
 
   // delete
-  async deleteTransaction(id: number) {
+  async deleteTransaction(id: string) {
     const deletedTransaction = await this.transactionRepository.delete(id);
     if (!deletedTransaction.affected) {
       throw new HttpException('Transaction not found', HttpStatus.NOT_FOUND);
