@@ -1,7 +1,8 @@
+import { User } from '../entity/user.entity';
 export class CreateTransactionDto {
   amount: number;
   currency: string;
-  client_id: string;
+  user: User;
   date: string;
   commission: number;
   baseCurrency: string;

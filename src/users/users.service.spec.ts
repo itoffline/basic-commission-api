@@ -60,6 +60,7 @@ describe('UsersService', () => {
       username: 'test',
       password: 'test',
       privilegedCommission: false,
+      transactions: [],
     });
     expect(user).toBeDefined();
     expect(user.id).toBe('test');

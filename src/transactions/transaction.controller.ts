@@ -1,5 +1,6 @@
 import {
   Body,
+  Request,
   Controller,
   Delete,
   Get,
@@ -7,19 +8,23 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import CreateTransactionDto from './dto/createTransaction.dto';
+import CreateTransactionDto from '../dto/createTransaction.dto';
 import { TransactionService } from './transaction.service';
-import { Commission } from './types/commission';
-import { JwtAuthGuard } from './auth/jwt.auth.guard';
+import { Commission } from '../types/commission';
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 
 @Controller('Transactions')
 export class TransactionController {
   constructor(private readonly TransactionsService: TransactionService) {}
 
   // get all Transactions
+  @UseGuards(JwtAuthGuard)
   @Get()
-  getTransactions() {
-    return this.TransactionsService.getAllTransactions();
+  getTransactions(@Request() req) {
+    if (!req.user || !req.user.userId) {
+      throw new Error('Failure to get transactions');
+    }
+    return this.TransactionsService.getMyTransactions(req.user.userId);
   }
 
   @Get('commission/:currency/:amount')
@@ -72,15 +77,25 @@ export class TransactionController {
   }
 
   // get Transaction by id
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getTransactionById(@Param('id') id: string) {
-    return this.TransactionsService.getTransactionById(id);
+  getTransactionById(@Param('id') id, @Request() req) {
+    return this.TransactionsService.getTransactionById({
+      id,
+      userId: req.user?.userId,
+    });
   }
 
   // create Transaction
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createTransaction(@Body() Transaction: CreateTransactionDto) {
+  async createTransaction(
+    @Request() req,
+    @Body() Transaction: CreateTransactionDto,
+  ) {
+    if (req.user && req.user.userId) {
+      Transaction.user = req.user.userId;
+    }
     return this.TransactionsService.createTransaction(Transaction);
   }
 

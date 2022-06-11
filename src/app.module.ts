@@ -6,7 +6,7 @@ import { AuthService } from './auth/auth.service';
 import * as Joi from 'joi';
 
 import { StoreModule } from './store/store.module';
-import { TransactionModule } from './transaction.module';
+import { TransactionModule } from './transactions/transaction.module';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 

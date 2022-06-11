@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../entity/user.entity';
 
 @Entity()
@@ -12,14 +18,11 @@ export class Transaction {
   @Column()
   currency: string;
 
-  @ManyToOne(() => User, (user) => user.id)
-  user: string;
+  @ManyToOne(() => User, (user) => user.transactions)
+  user: User;
 
   @Column()
   date: string;
-
-  @Column()
-  commission: number;
 
   @Column()
   baseCurrency: string;
