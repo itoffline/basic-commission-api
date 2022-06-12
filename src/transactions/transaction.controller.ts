@@ -34,7 +34,7 @@ export class TransactionController {
       throw new Error('Must include amount and currency in request params!');
     }
     const { currency: resCurrency, amount: resAmount } =
-      this.TransactionsService.commission(amount, currency);
+      this.TransactionsService.commission(amount, currency, false);
 
     // if the commission is 0.05 cents or above, return the calculated commission
     // if it is below 0.05 cents, return the minimum commission of 0.05 cents
@@ -54,10 +54,18 @@ export class TransactionController {
   @Get('commission/:id')
   async commissionByTransactionId(
     @Param('id') id: string,
+    @Request() req,
   ): Promise<Commission> {
+    let privileged = false;
+    if (req.user && req.user.privilegedCommission) {
+      privileged = true;
+    }
     try {
       const { amount: resAmount, currency: resCurrency } =
-        await this.TransactionsService.commissionByTransactionId(id);
+        await this.TransactionsService.commissionByTransactionId(
+          id,
+          privileged,
+        );
       if (!resAmount || !resCurrency) {
         throw new Error('Transaction not found');
       }

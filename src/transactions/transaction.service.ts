@@ -5,6 +5,7 @@ import CreateTransactionDto from '../dto/createTransaction.dto';
 import { Transaction } from '../entity/transaction.entity';
 
 import { Commission } from '../types/commission';
+import { User } from '../entity/user.entity';
 
 @Injectable()
 export class TransactionService {
@@ -18,8 +19,25 @@ export class TransactionService {
     return this.transactionRepository.find();
   }
 
+  checkRules(amount: number, privileged: boolean): number {
+    // check if user is privileged
+    // if user is privileged return 0.05 commission
+    if (privileged) {
+      return 0.05;
+    }
+    // default rule
+    if (amount <= 0.05) {
+      return 0.05;
+    }
+    return amount * 0.05;
+  }
+
   // calculate commission
-  commission(amount: number, currency: string): Commission {
+  commission(
+    amount: number,
+    currency: string,
+    privileged: boolean,
+  ): Commission {
     if (currency != 'EUR') {
       console.log('currency not EUR');
       console.log('must call exchange service which is not implemented yet');
@@ -28,14 +46,17 @@ export class TransactionService {
         amount: 0.05,
       };
     }
-    const commission = amount * 0.05;
+    const commission = this.checkRules(amount, privileged);
     return {
       currency: 'EUR',
       amount: commission,
     };
   }
 
-  async commissionByTransactionId(id: string): Promise<Commission> {
+  async commissionByTransactionId(
+    id: string,
+    privileged: boolean,
+  ): Promise<Commission> {
     try {
       const transaction = await this.transactionRepository.findOneBy({
         id,
@@ -47,16 +68,14 @@ export class TransactionService {
       const { currency: resCurrency, amount: resAmount } = this.commission(
         amount,
         currency,
+        privileged,
       );
       return {
         currency: resCurrency,
         amount: resAmount,
       };
     } catch (err) {
-      throw new HttpException(
-        'Failed to get transaction commission',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new Error('Failed to get transaction commission');
     }
   }
 

@@ -4,7 +4,6 @@ export class CreateTransactionDto {
   currency: string;
   user: User;
   date: string;
-  commission: number;
   baseCurrency: string;
   baseAmount: number;
 }

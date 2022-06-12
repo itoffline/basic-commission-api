@@ -22,7 +22,11 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.id };
+    const payload = {
+      username: user.username,
+      sub: user.id,
+      privilegedCommission: user.privilegedCommission,
+    };
     return {
       access_token: this.jwtService.sign(payload, {
         secret: this.configService.get('SECRET_JWT_KEY'),
@@ -39,7 +43,11 @@ export class AuthService {
     }
 
     const createdUser = await this.usersService.create(user);
-    const payload = { username: createdUser.username, sub: createdUser.id };
+    const payload = {
+      username: createdUser.username,
+      sub: createdUser.id,
+      privilegedCommission: createdUser.privilegedCommission,
+    };
     return {
       access_token: this.jwtService.sign(payload, {
         secret: this.configService.get('SECRET_JWT_KEY'),

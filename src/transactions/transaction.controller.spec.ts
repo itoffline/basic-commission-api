@@ -104,6 +104,7 @@ describe('TransactionController', () => {
       try {
         await transactionController.commissionByTransactionId(
           '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+          false,
         );
       } catch (err) {
         expect(err.message).toBe('Failed to get transaction commission');
@@ -111,6 +112,7 @@ describe('TransactionController', () => {
       try {
         await transactionController.commissionByTransactionId(
           '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+          false,
         );
       } catch (err) {
         expect(err.message).toBe('Failed to get transaction commission');
@@ -147,9 +149,11 @@ describe('TransactionController', () => {
     it('should return above 0.05 cents commission result and above', async () => {
       const res1 = await transactionController.commissionByTransactionId(
         '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+        false,
       );
       const res2 = await transactionController.commissionByTransactionId(
         '5f3f8f8b-f8b8-4f8b-8f8b-8f8b8f8b8f8b',
+        false,
       );
       expect(res1).toEqual({
         currency: 'EUR',
