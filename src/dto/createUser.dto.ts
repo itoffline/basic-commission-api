@@ -1,6 +1,6 @@
 import { Transaction } from '../entity/transaction.entity';
 export class CreateUserDto {
-  id: string;
+  id: number;
   username: string;
   password: string;
   privilegedCommission: boolean;

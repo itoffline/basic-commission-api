@@ -54,7 +54,7 @@ export class TransactionService {
   }
 
   async commissionByTransactionId(
-    id: string,
+    id: number,
     privileged: boolean,
   ): Promise<Commission> {
     try {
@@ -80,7 +80,7 @@ export class TransactionService {
   }
 
   // find by id
-  async getTransactionById(params: { userId: string; id: string }) {
+  async getTransactionById(params: { userId: number; id: number }) {
     const transaction = await this.transactionRepository.findOne({
       where: {
         id: params.id,
@@ -110,7 +110,7 @@ export class TransactionService {
     }
   }
 
-  async getMyTransactions(id: string) {
+  async getMyTransactions(id: number) {
     const transactions = await this.transactionRepository.find({
       where: {
         user: { id },

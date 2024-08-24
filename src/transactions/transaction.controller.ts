@@ -53,7 +53,7 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard)
   @Get('commission/:id')
   async commissionByTransactionId(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Request() req,
   ): Promise<Commission> {
     let privileged = false;

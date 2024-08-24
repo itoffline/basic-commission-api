@@ -9,8 +9,8 @@ import { User } from '../entity/user.entity';
 
 @Entity()
 export class Transaction {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   amount: number;
